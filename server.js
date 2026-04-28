@@ -2,7 +2,7 @@ app.get('/api/reis', async (req, res) => {
   const { from, to } = req.query;
 
   const response = await fetch(
-    "https://gateway.apiportal.ns.nl/reisinformatie-api/api/v5/trips",
+    "https://gateway.apiportal.ns.nl/reisinformatie-api/api/v3/trips",
     {
       method: "POST",
       headers: {
