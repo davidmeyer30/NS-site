@@ -1,23 +1,35 @@
 app.get('/api/reis', async (req, res) => {
   const { from, to } = req.query;
 
-  const url = `https://gateway.apiportal.ns.nl/reisinformatie-api/api/v3/trips?origin=${from}&destination=${to}`;
-
-  const response = await fetch(url, {
-    headers: {
-      "Ocp-Apim-Subscription-Key": process.env.NS_API_KEY,
-      "Accept": "application/json"
+  const response = await fetch(
+    "https://gateway.apiportal.ns.nl/reisinformatie-api/api/v5/trips",
+    {
+      method: "POST",
+      headers: {
+        "Ocp-Apim-Subscription-Key": process.env.NS_API_KEY,
+        "Content-Type": "application/json",
+        "Accept": "application/json"
+      },
+      body: JSON.stringify({
+        origin: {
+          name: from
+        },
+        destination: {
+          name: to
+        },
+        searchForArrival: false
+      })
     }
-  });
+  );
 
-  const data = await response.text();
+  const text = await response.text();
 
   try {
-    res.json(JSON.parse(data));
+    res.json(JSON.parse(text));
   } catch (e) {
     res.status(500).json({
-      error: "NS API gaf geen JSON terug",
-      raw: data
+      error: "NS API response niet geldig",
+      raw: text
     });
   }
 });
